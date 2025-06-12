@@ -212,27 +212,9 @@ function matchOrAssignBelCodes() { // Consider renaming to matchOrAssignNumericI
   return results; // Each row[0] in this array will be a number
 }
 
-// NOTE: This function assumes getDataFromSheets() is defined elsewhere and returns
-// { sData, eData, dData }.
-// You would need to define getDataFromSheets(), for example, a MOCK version:
-function getDataFromSheets() {
-  // This is a MOCK function. You need to implement this to fetch your actual sheet data.
-  Logger.log("ℹ️ getDataFromSheets: Using MOCK data. Implement actual data fetching.");
-  const ss = SpreadsheetApp.getActiveSpreadsheet(); // Assuming this script runs in Google Sheets environment
-  const dirSheet = ss.getSheetByName("Directory");
-  const eventSheet = ss.getSheetByName("Event Attendance");
-  const serviceSheet = ss.getSheetByName("Service Attendance");
-
-  // Simulating data fetching:
-  // Replace with actual getLastRow and getRange().getValues()
-  // The provided code (matchOrAssignBelCodes) uses slice(1) on dData, eData, sData,
-  // implying it expects these arrays to include a header row that slice(1) will skip.
-  return {
-    dData: dirSheet ? dirSheet.getDataRange().getValues() : [['Timestamp', 'BEL', 'Full Name']], // Header + example data structure
-    eData: eventSheet ? eventSheet.getDataRange().getValues() : [['BEL', 'Full Name', 'Event', 'ID', 'First', 'Last', 'Email', 'Phone', 'Form', 'Role', 'Timestamp']], // Header + data
-    sData: serviceSheet ? serviceSheet.getDataRange().getValues() : [['BEL', 'Full Name', 'First', 'Last', 'Timestamp', 'Status', 'Email', 'Notes']] // Header + data
-  };
-}
+// NOTE: matchOrAssignBelCodes expects a global getDataFromSheets() function
+// which is implemented in LoadAndCleanData.js. That function should return
+// an object containing { sData, eData, dData }.
 
 // Example of how you might call this and log the results (for testing):
 /*
