@@ -340,58 +340,6 @@
   return NaN; // Return NaN if no number could be extracted
  }
 
- /**
-  * Combines First Name (Col C) and Last Name (Col D) into Full Name (Col B)
-  * for the row determined by the event object or the last row.
-  * @param {Object} e The event object from an onFormSubmit trigger (optional).
-  */
- function combineNamesOnFormSubmit(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = ss.getSheetByName("Sunday Service");
-
-  if (!sheet) {
-  Logger.log("combineNamesOnFormSubmit: Sheet 'Sunday Service' not found. Exiting.");
-  return;
-  }
- 
-  var targetRow;
-  if (e && e.range) {
-  targetRow = e.range.getRow();
-  Logger.log(`combineNamesOnFormSubmit: Processing row ${targetRow} from onFormSubmit event.`);
-  } else {
-  targetRow = sheet.getLastRow();
-  Logger.log(`combineNamesOnFormSubmit: No event object, processing last row: ${targetRow}. This should ideally be called with an event.`);
-  if (targetRow === 0) {
-  Logger.log("combineNamesOnFormSubmit: Sheet is empty, nothing to process.");
-  return;
-  }
-  }
-
-  var firstName = "";
-  var lastName = "";
-  try {
-  firstName = sheet.getRange(targetRow, 3).getValue(); // Column C
-  lastName = sheet.getRange(targetRow, 4).getValue();  // Column D
-  } catch (err) {
-  Logger.log(`combineNamesOnFormSubmit: Error getting first/last name for row ${targetRow}: ${err.toString()}`);
-  return;
-  }
-
-  if (firstName && typeof firstName.trim === 'function' && lastName && typeof lastName.trim === 'function' && firstName.trim() !== "" && lastName.trim() !== "") {
-  var fullName = firstName.trim() + " " + lastName.trim();
-  try {
-  sheet.getRange(targetRow, 2).setValue(fullName); // Column B
-  Logger.log(`combineNamesOnFormSubmit: Successfully set Full Name "${fullName}" in row ${targetRow}, Column B.`);
-  } catch (err) {
-  Logger.log(`combineNamesOnFormSubmit: Error setting full name for row ${targetRow}: ${err.toString()}`);
-  }
-  } else {
-  let missing = [];
-  if (!firstName || (typeof firstName.trim === 'function' && firstName.trim() === "")) missing.push("First Name (Col C)");
-  if (!lastName || (typeof lastName.trim === 'function' && lastName.trim() === "")) missing.push("Last Name (Col D)");
-  Logger.log(`combineNamesOnFormSubmit: ${missing.join(' and ')} is missing or blank in row ${targetRow}. Full name not combined.`);
-  }
- }
 
  // You also need the 'onFormSubmitTransfer(e)' function in your script project.
  // function onFormSubmitTransfer(e) { ... }
