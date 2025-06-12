@@ -182,7 +182,7 @@
   // Ensure enough columns are read, at least up to NAME_COLUMN.
   const numColsToFetch = Math.max(ID_COLUMN, NAME_COLUMN, sundayServiceSheet.getLastColumn() > 0 ? sundayServiceSheet.getLastColumn() : NAME_COLUMN);
   currentRowData = sundayServiceSheet.getRange(actualSheetRowNumber, 1, 1, numColsToFetch).getValues()[0];
-  Logger.log(`Trigger Mode: Fetched data for row <span class="math-inline">\{actualSheetRowNumber\}\: \[</span>{currentRowData.join(", ")}]`);
+  Logger.log(`Trigger Mode: Fetched data for row ${actualSheetRowNumber}: [${currentRowData.join(", ")}]`);
   } catch (fetchErr) {
   Logger.log(`Trigger Mode: Error fetching data for row ${actualSheetRowNumber}: ${fetchErr.toString()}. Skipping this row.`);
   continue;
@@ -202,7 +202,7 @@
   }
   // Check if enough columns exist, especially for NAME_COLUMN
   if (currentRowData.length < NAME_COLUMN) {
-  Logger.log(`Skipping Sheet Row ${actualSheetRowNumber}: Row does not have enough columns for Name (needs at least ${NAME_COLUMN}). Has <span class="math-inline">\{currentRowData\.length\}\. Data\: \[</span>{currentRowData.join(', ')}]`);
+  Logger.log(`Skipping Sheet Row ${actualSheetRowNumber}: Row does not have enough columns for Name (needs at least ${NAME_COLUMN}). Has ${currentRowData.length}. Data: [${currentRowData.join(', ')}]`);
   continue;
   }
 
@@ -215,11 +215,11 @@
 
   if (masterNameIdMap.has(formattedName)) {
   determinedId = masterNameIdMap.get(formattedName);
-  Logger.log(`Sheet Row <span class="math-inline">\{actualSheetRowNumber\}\: Name "</span>{currentName}" found in master map. ID from map: "<span class="math-inline">\{determinedId\}"\. Existing ID in sheet\: "</span>{existingIdInSheet}"`);
+  Logger.log(`Sheet Row ${actualSheetRowNumber}: Name "${currentName}" found in master map. ID from map: "${determinedId}". Existing ID in sheet: "${existingIdInSheet}"`);
   } else {
   highestExistingNumber++;
   determinedId = String(highestExistingNumber);
-  Logger.log(`Sheet Row <span class="math-inline">\{actualSheetRowNumber\}\: Name "</span>{currentName}" NOT found in map. Generating new ID: "<span class="math-inline">\{determinedId\}"\. Existing ID in sheet\: "</span>{existingIdInSheet}"`);
+  Logger.log(`Sheet Row ${actualSheetRowNumber}: Name "${currentName}" NOT found in map. Generating new ID: "${determinedId}". Existing ID in sheet: "${existingIdInSheet}"`);
   masterNameIdMap.set(formattedName, determinedId); // Update map for future consistency within this run
   }
 
@@ -228,12 +228,12 @@
 
   if (determinedId !== "" && determinedId !== sheetIdToCompare) {
   updatesToWrite.push({ row: actualSheetRowNumber, id: determinedId });
-  Logger.log(`Sheet Row <span class="math-inline">\{actualSheetRowNumber\}\: QUEUED FOR ID UPDATE\. New ID\: "</span>{determinedId}", Old ID: "${sheetIdToCompare}".`);
+  Logger.log(`Sheet Row ${actualSheetRowNumber}: QUEUED FOR ID UPDATE. New ID: "${determinedId}", Old ID: "${sheetIdToCompare}".`);
   if (isTriggerMode) idAssignedInTriggerMode = true;
   } else if (determinedId === "") {
-  Logger.log(`Sheet Row <span class="math-inline">\{actualSheetRowNumber\}\: SKIPPED ID UPDATE\. Determined ID is empty for name "</span>{currentName}".`);
+  Logger.log(`Sheet Row ${actualSheetRowNumber}: SKIPPED ID UPDATE. Determined ID is empty for name "${currentName}".`);
   } else {
-  Logger.log(`Sheet Row <span class="math-inline">\{actualSheetRowNumber\}\: NO ID UPDATE NEEDED\. Determined ID \("</span>{determinedId}") matches existing sheet ID ("${sheetIdToCompare}").`);
+  Logger.log(`Sheet Row ${actualSheetRowNumber}: NO ID UPDATE NEEDED. Determined ID ("${determinedId}") matches existing sheet ID ("${sheetIdToCompare}").`);
   }
   } else {
   Logger.log(`Sheet Row ${actualSheetRowNumber}: No name in Column B (or name is blank). Skipping ID assignment.`);
@@ -241,19 +241,19 @@
   }
 
   if (updatesToWrite.length > 0) {
-  Logger.log(`Attempting to write <span class="math-inline">\{updatesToWrite\.length\} ID updates to "</span>{SUNDAY_SERVICE_SHEET_NAME}".`);
+  Logger.log(`Attempting to write ${updatesToWrite.length} ID updates to "${SUNDAY_SERVICE_SHEET_NAME}".`);
   let successCount = 0;
   updatesToWrite.forEach(update => {
   try {
   sundayServiceSheet.getRange(update.row, ID_COLUMN).setValue(update.id);
   successCount++;
   } catch (err) {
-  Logger.log(`Error writing ID "${update.id}" to row <span class="math-inline">\{update\.row\} in "</span>{SUNDAY_SERVICE_SHEET_NAME}": ${err.toString()}`);
+  Logger.log(`Error writing ID "${update.id}" to row ${update.row} in "${SUNDAY_SERVICE_SHEET_NAME}": ${err.toString()}`);
   }
   });
   if (successCount > 0) {
   SpreadsheetApp.flush(); // IMPORTANT: Flush changes to the sheet
-  Logger.log(`${successCount} of <span class="math-inline">\{updatesToWrite\.length\} ID updates successfully written and flushed to "</span>{SUNDAY_SERVICE_SHEET_NAME}".`);
+  Logger.log(`${successCount} of ${updatesToWrite.length} ID updates successfully written and flushed to "${SUNDAY_SERVICE_SHEET_NAME}".`);
   } else {
   Logger.log(`No ID updates were successfully written, though ${updatesToWrite.length} were queued.`);
   }
@@ -301,7 +301,7 @@
   try {
   const sheet = spreadsheet.getSheetByName(sheetName);
   if (!sheet) {
-  Logger.log(`Warning: Sheet "<span class="math-inline">\{sheetName\}" not found in spreadsheet "</span>{spreadsheet.getName()}". Returning empty data.`);
+  Logger.log(`Warning: Sheet "${sheetName}" not found in spreadsheet "${spreadsheet.getName()}". Returning empty data.`);
   return [];
   }
   const lastRow = sheet.getLastRow();
@@ -316,7 +316,7 @@
   }
   return sheet.getRange(1, 1, lastRow, lastCol).getValues();
   } catch (err) {
-  Logger.log(`Error reading from sheet "<span class="math-inline">\{sheetName\}" in "</span>{spreadsheet.getName()}": ${err.toString()}. Returning empty data.`);
+  Logger.log(`Error reading from sheet "${sheetName}" in "${spreadsheet.getName()}": ${err.toString()}. Returning empty data.`);
   return [];
   }
  }
