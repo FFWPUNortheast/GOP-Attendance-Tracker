@@ -1,5 +1,5 @@
 /**
-  * Main handler for form submissions to 'sunday service'.
+ * Main handler for form submissions to 'Sunday Service'.
   * It first ensures names are combined, then processes IDs, then transfers data.
   * @param {Object} e The event object from an onFormSubmit trigger.
   */
@@ -9,10 +9,10 @@
 
   // --- Configuration ---
   const DIRECTORY_SPREADSHEET_ID = '1Z7R6Es_NajyhZwHXxpmfR8MqvCbf3KUtYZ9NIE3G8tU'; // KEEP YOUR ACTUAL ID
-  const SUNDAY_SERVICE_SHEET_NAME = 'sunday service';
-  const EVENT_ATTENDANCE_SHEET_NAME = 'Event attendance'; // Used for highest ID and map
-  const DIRECTORY_TAB_NAME = 'directory';       // Used for highest ID and map
-  const NEW_MEMBER_FORM_TAB_NAME = 'new member form';    // Used for highest ID and map
+  const SUNDAY_SERVICE_SHEET_NAME = 'Sunday Service';
+  const EVENT_ATTENDANCE_SHEET_NAME = 'Event Attendance'; // Used for highest ID and map
+  const DIRECTORY_TAB_NAME = 'Directory';       // Used for highest ID and map
+  const NEW_MEMBER_FORM_TAB_NAME = 'New Member Form';    // Used for highest ID and map
   const SERVICE_ATTENDANCE_SHEET_NAME = 'Service Attendance'; // Added for mapping
   const ID_COLUMN = 1;      // Personal ID is in Column A
   const NAME_COLUMN = 2;      // Full Name is in Column B (this is what combineNamesOnFormSubmit populates)
@@ -163,7 +163,7 @@
   Logger.log(`"${SUNDAY_SERVICE_SHEET_NAME}" sheet has no data rows to process (or only header) in manual/time-driven mode. Script finished.`);
   return;
   }
-  Logger.log(`Manual/Time-driven Mode: Processing 'sunday service' from sheet row 2 up to ${actualEndDataIndex}.`);
+  Logger.log(`Manual/Time-driven Mode: Processing 'Sunday Service' from sheet row 2 up to ${actualEndDataIndex}.`);
   for (let dataIdx = 1; dataIdx < actualEndDataIndex; dataIdx++) { // dataIdx is for sundayServiceDataAll (0-indexed), so dataIdx=1 is sheet row 2
   rowsToProcessDetails.push({ dataIndexInArray: dataIdx, sheetRow: dataIdx + 1 });
   }
@@ -258,7 +258,7 @@
   Logger.log(`No ID updates were successfully written, though ${updatesToWrite.length} were queued.`);
   }
   } else {
-  Logger.log('No ID updates were necessary for the processed rows in "sunday service".');
+  Logger.log('No ID updates were necessary for the processed rows in "Sunday Service".');
   }
 
   const functionEndTime = new Date();
